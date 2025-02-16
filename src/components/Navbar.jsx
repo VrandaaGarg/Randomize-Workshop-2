@@ -19,8 +19,8 @@ const Navbar = () => {
 
     checkAuth();
     // Add event listener for storage changes
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
   }, []);
 
   const handleLogout = () => {
@@ -33,20 +33,27 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-slate-900 text-gray-100 px-8 py-4">
+    <nav className="bg-slate-900 text-gray-100 px-8 py-4 fixed w-full z-20">
       <div className="flex items-center justify-between">
         <NavLink to="/" className="text-2xl font-bold text-blue-400">
           WebDev Workshop
         </NavLink>
 
         <div className="flex items-center gap-8">
-          <Link to="/" className="hover:text-blue-400">Home</Link>
-          <Link to="/about" className="hover:text-blue-400">About</Link>
-          
+          <Link to="/" className="hover:text-blue-400">
+            Home
+          </Link>
+          <Link to="/about" className="hover:text-blue-400">
+            About
+          </Link>
+
           {user ? (
             <div className="flex items-center gap-4">
-              <Link to="/profile" className="flex items-center gap-2 hover:text-blue-400">
-                <FaUserCircle className="text-2xl"/>
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 hover:text-blue-400"
+              >
+                <FaUserCircle className="text-2xl" />
                 <span>{user.name}</span>
               </Link>
               <button
