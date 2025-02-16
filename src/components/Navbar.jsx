@@ -7,62 +7,63 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch logged-in user from localStorage
-    const storedUserEmail = localStorage.getItem("loggedInUser"); // Store only email
-    if (storedUserEmail) {
-      const storedUserData = localStorage.getItem(storedUserEmail); // Fetch full user data
-      if (storedUserData) {
-        setUser(JSON.parse(storedUserData));
+    const checkAuth = () => {
+      const storedUserEmail = localStorage.getItem("loggedInUser");
+      if (storedUserEmail) {
+        const storedUserData = localStorage.getItem(storedUserEmail);
+        if (storedUserData) {
+          setUser(JSON.parse(storedUserData));
+        }
       }
-    }
+    };
+
+    checkAuth();
+    // Add event listener for storage changes
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
     if (user?.email) {
-      localStorage.removeItem(user.email); // Remove user-specific data
+      localStorage.removeItem(user.email);
     }
     setUser(null);
     navigate("/login");
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <NavLink to="/" className="text-2xl font-bold">
-        WebDev Workshop
-      </NavLink>
-      <div className="space-x-6">
-        <Link to="/" className="hover:underline">
-          Home
-        </Link>
-        <Link to="/about" className="hover:underline">
-          About
-        </Link>
-      </div>
-      <div>
-        {user ? (
-          // ✅ Show profile icon & logout button if user is logged in
-          <div className="flex items-center space-x-4">
-            <FaUserCircle
-              className="text-2xl cursor-pointer"
-              onClick={() => navigate("/profile", { state: { user } })}
-            />
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-4 py-2 rounded"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          // ✅ Show login button if no user is logged in
-          <button
-            className="hover:underline"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-        )}
+    <nav className="bg-slate-900 text-gray-100 px-8 py-4">
+      <div className="flex items-center justify-between">
+        <NavLink to="/" className="text-2xl font-bold text-blue-400">
+          WebDev Workshop
+        </NavLink>
+
+        <div className="flex items-center gap-8">
+          <Link to="/" className="hover:text-blue-400">Home</Link>
+          <Link to="/about" className="hover:text-blue-400">About</Link>
+          
+          {user ? (
+            <div className="flex items-center gap-4">
+              <Link to="/profile" className="flex items-center gap-2 hover:text-blue-400">
+                <FaUserCircle className="text-2xl"/>
+                <span>{user.name}</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 px-4 py-1 rounded transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <button className="bg-blue-500 hover:bg-blue-600 px-4 py-1 rounded transition-colors">
+                Login
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
     </nav>
   );
